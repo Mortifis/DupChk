@@ -9,8 +9,8 @@ Can be run from a terminal shell using jsexec dupchk -s <syspass> -<option>s whe
     -q turns off logging to /sbbs/data/logs (default is on)
   
 DupChk.js can also be run from within SBBS anywhere by a User with a Security Level greater 89.
-    From the command Shell EXEC ?DUPCHK  will invoke the dupchk script which, whenj run
-    from the Command Shell does not require the system password (since it is required to ;EXEC)
+    From the command Shell EXEC ?DUPCHK  will invoke the dupchk.js script which, when run
+    from the Command Shell, does not require the system password (since it is required to ;EXEC)
     and will default to comparing Email Addresses.
     
 DupChk.js is intended to compare user accounts and report any duplicate user base entries
