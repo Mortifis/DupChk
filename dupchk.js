@@ -1,4 +1,4 @@
-/* $Id: dup_user_check.js,v 01b 2019/07/20 16:24:35 mortifis Exp $ */
+/* $Id: dup_user_check.js,v 0.1.3 2019/07/22 12:19:35 mortifis Exp $ */
 
 /* Synchronet v3.15 script (to be executed with jsexec) */
 
