@@ -1,4 +1,4 @@
-/* $Id: dup_user_check.js,v 0.1.3 2019/07/22 12:19:35 mortifis Exp $ */
+/* $Id: dup_user_check.js,v 0.1.4 2019/07/22 16:44:35 mortifis Exp $ */
 
 /* Synchronet v3.15 script (to be executed with jsexec) */
 
@@ -57,6 +57,8 @@ Can be run even when the BBS is offline!
 		   		  else { conio.clrscr();
 		   		  	  conio.suspend();
 					}
+		   0.1.4    : Changed numbering schema, block entery of user number that is not in dup_list, many
+		   	      color changes and whether or not script is run via jsexec or terminal server	
 		   		  	
 */
 
@@ -339,20 +341,20 @@ if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few i
 		done = false;
 		continue;
 	}
-		/* var x = 0;
+		var x = 0;
 		var is_there = false;
-		print("shits n giggles dup_list has " + dup_list.legth + " entries");
-		mswait(2000);
-	  	for(x=0; x <= dup_list.length; x++) 
+		// print("shits n giggles dup_list has " + dup_list.length + " entries");
+		// mswait(2000);
+	  	for(x=0; x < dup_list.length; x++) 
 		{
-	     		if(dup_list[x].num == lookup) is_there = true;    
+	     		if(dup_list[x].num == lookup || dup_list[x].d_num == lookup) is_there = true;    
 	  	}
 	   
 	   if(!is_there) {
 	      print("That User is not in the list ... aborting!");
 	      done = false;
 	      continue;
-	   } */
+	   } 
 	  
   	
 	  
