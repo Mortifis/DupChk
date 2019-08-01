@@ -1,4 +1,4 @@
-/* $Id: dup_user_check.js,v 0.1.4 2019/07/22 16:44:35 mortifis Exp $ */
+/* $Id: dup_user_check.js,v 0.1.3 2019/07/22 12:19:35 mortifis Exp $ */
 
 /* Synchronet v3.15 script (to be executed with jsexec) */
 
@@ -10,57 +10,6 @@ Logfile is var logFile = "/sbbs/data/logs/dupuser.log"; SBBS is sane so this wor
 
 Can be run even when the BBS is offline!
 *************************************************************************/
-
-/*
-	ToDo: 	* Add (js.global.console) - running from bbs and print colorized strings or if from command line print without colorization
-			  
-		* Load the data directory from system configs, better yet read logFile from modopts.ini
-		
-		* Add [dupchkr] in modopts.ini for security level FLAGS
-		 (currently only the Security Level is changed not any exemptions/restrictions) 
-		
-		* Change the ability to access any user account to only the ones in the dup_list[]
-		  dup_list.find() does not work under current version of js used by SBBS
-		  Currently selecting any valid user number allows for editing that user!
-	
-	NOTE:  If you use emailval.js, setting a dupuser to the security level that
-	       requires a re-evaluation of the email address would be beneficial! 
-	
-			flags1_after_change (default: no change)
-			flags2_after_change (default: no change)
-			flags3_after_change (default: no change)
-			flags4_after_change (default: no change)
-			exemptions_after_change (default: no change)
-			restrictions_after_change (default: no change)
-			expiration_after_change (default: false)
-			expiration_days_after_change (default: no change)
-	
-	Note: the flags, exemptions, and restrictions .ini values support 'A' through
-	      'Z' with the optional '+' (add) and '-' (remove) modifiers.
-		      e.g. "+A-B" to add the A flag and remove the B flag
-		      e.g. "AB" to change the flag set to just "AB"
-		  Numeric values are supported for assignment (not modification).
-		      e.g. 0 = no flags, 1 = A, 2 = B, 4 = C, 8 = D, etc.
-		      
-	Revisions: 0.1a    : Initial script; was just for email address comparisons.
-		   0.1b    : Added command line options and -h help section, and switch case for Search Type
-		   0.1c    : Added Search Type Switching, logging, and other stuffies
-		   0.1c.r1 : Added range check so looking up a record beyond the lastuser or user #0 is not allowed
-		   0.1c.2  : Changed range check to allow assing a user to the user base with basic values similar to
-		             makeuser.js 
-	 	   0.1c.3  : Added dupchk.ini for modifiable values (will be replace with modopts.ini entry later)
-		             Add command line option -c to create/edit
-		   0.1.3.2 : Changed Number Scheme,   
-		   		* check if script is run from jsexec or from bbs ;exec ?dup_user_check.js 
-		   		  ie: if(js.global.console)
-		   		  	console.clear
-		   		  else { conio.clrscr();
-		   		  	  conio.suspend();
-					}
-		   0.1.4    : Changed numbering schema, block entery of user number that is not in dup_list, many
-		   	      color changes and whether or not script is run via jsexec or terminal server	
-		   		  	
-*/
 
 load("sbbsdefs.js");
 
@@ -274,11 +223,28 @@ if(dups == 0)
  	mylog("Your User Database is clear of duplicate " + lookFor + " Entries!");
 } else mylog("Scanned " + recs + " records. Found " + dups + " Duplicate " + lookFor + " " +dup + "!");
 
-if(js.global.console) printf("Enter [\1yNumber\1g] [\1yS\1g] Switch Search Type or [\1yQ\1g]uit:  "); 
-	else printf("Enter [Number] [S] Switch Search Type or [Q\]uit:  ");
+if(js.global.console) printf("Enter [\1yH\1g] Handle [\1yNumber\1g] [\1yS\1g] Switch Search Type [\1yO\1g] Other or [\1yQ\1g]uit:  "); 
+	else printf("Enter [Handle] [Number] [S] Switch Search Type [O] Other or  [Q\]uit:  ");
 
-if(js.global.console) lookup = console.getstr();
+if(js.global.console) lookup = console.getkeys("HSOQ", lastuser);
 else lookup=readln();
+
+if(isNaN(lookup)) {
+if(lookup.toUpperCase() == "H")
+{
+		if(js.global.console) print("\1r\r\nThis Option is not implemented\1g");
+		  else { print("\r\nThis Option is not implemented"); mswait(2000); }
+		done = false;
+		continue;
+}
+
+if(lookup.toUpperCase() == "O")
+{
+	if(js.global.console) print("\1r\r\nThis Option is not implemented\1g");
+	  else { print("\r\nThis Option is not implemented"); mswait(2000); }
+	done = false;
+	continue;
+}
 
 if(lookup.toUpperCase() == "Q") 
 {        
@@ -328,14 +294,14 @@ if(lookup.toUpperCase() == "S")
 	done = false;
 	exit;
 }
-
+}
 if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few issues in 0.1b
 { 
   	printf("Synchronet Duplicate " + lookFor + " Checker " + REVISION + "\r\n\r\n");
 	
 	if(lookup > lastuser || lookup == 0) {
-	       if(js.global.console) print("\r\r\x1b[36mInvalid User Number ... Out of Range!");   
-		else print("\r\rInvalid User Number ... Out of Range!");
+	       if(js.global.console) print("\r\r\x1b[36mInvalid User Number!");   
+		else print("\r\rInvalid User Number!\r\n");
 		mylog("User #" + lookup + " Out of Range");
 		mswait(2000);
 		done = false;
@@ -351,12 +317,11 @@ if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few i
 	  	}
 	   
 	   if(!is_there) {
-	      print("That User is not in the list ... aborting!");
+	      print("User " + lookup + " is not in the Duplicate " + lookFor + " list! \r\n");
+	      mswait(2000);
 	      done = false;
 	      continue;
 	   } 
-	  
-  	
 	  
 	printf("Loading Record #" + lookup);
   	var e = new User(lookup);
@@ -384,7 +349,8 @@ if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few i
 	if(e.is_sysop ) 
 	{
 			mylog("Not Editing SysOP: " + " " + e.alias);
-		     	print("\r\nCannot Edit SysOP account, operation not permitted!");
+		     	print("\r\nCannot Edit SysOP account, operation not permitted!\r");
+			print("Please use uedit to edit this account");    
 			printf("\r\n<PRESS ENTER>");     
 			readln();
 	  		continue;
