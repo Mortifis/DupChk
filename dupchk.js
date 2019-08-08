@@ -249,6 +249,7 @@ if(lookup.toUpperCase() == "O")
 if(lookup.toUpperCase() == "Q") 
 {        
         done = true;
+	continue;
         exit;
 }
 
@@ -292,11 +293,11 @@ if(lookup.toUpperCase() == "S")
 	mylog("Switched Lookup Type from "+ old_lookFor + " to " + new_lookFor);
 	mswait(2000);
 	done = false;
+	continue;
 	exit;
 }
 }
-if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few issues in 0.1b
-{ 
+
   	printf("Synchronet Duplicate " + lookFor + " Checker " + REVISION + "\r\n\r\n");
 	
 	if(lookup > lastuser || lookup == 0) {
@@ -466,7 +467,7 @@ if(lookup.toUpperCase() != "Q" && lookup.toUpperCase() != "S") // solved a few i
 		mswait(2000); 
 	       }
 
-  }
+    
 } // end main while !done
 
 mylog("Program Exit! --------------------------------");
